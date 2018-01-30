@@ -1,0 +1,42 @@
+{% extends 'default/base.html' %}
+<!-- Main jumbotron for a primary marketing message or call to action -->
+{% block content %}
+<div class="jumbotron">
+    {% for message in messages %}
+    <div class="alert alert-success" role="alert">{{ message }}</div>
+    {% endfor %}
+    <div class="container">
+        <h1>這是我生命中美好的時刻!</h1>
+        <p>在這裡你可以分享你的私房食譜誒喜愛料理的朋友們</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">了解更多 &raquo;</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div id="result">
+
+        </div>
+    </div>
+</div> <!-- /container -->
+
+ <!-- 用前端JS去處理後端吐的API -->
+<script type="text/javascript">
+    var xhr = new XMLHttpRequest();
+    var onlondHandle = function() {
+        var data = JSON.parse(JSON.parse(xhr.responseText).data);
+        // 去讀18行
+        var result = document.getElementById("result");
+        var str = "";
+        data.forEach(function(value) {
+          str += '<div class="col-md-4"><h4>' + value.fields.title  + '</h4><a href="/recipes/' + value.pk + '" class="thumbnail">' + '<img src="' + value.fields.image_path + '">' + '</a></div>';
+        })
+        result.innerHTML = str;
+    };
+    xhr.open('GET', '/api/recipes', true);
+    xhr.send();
+    // 監聽器
+    xhr.onload = onlondHandle;
+</script>
+{% endblock %}
